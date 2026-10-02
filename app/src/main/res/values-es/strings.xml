@@ -608,4 +608,8 @@
     <string name="recents_slim_anim_duration">Duración de la animación</string>
     <string name="recents_slim_anim_off">Desactivada</string>
     <string name="recents_slim_anim_hint">Multiplica el tiempo base y sigue la escala de animación del sistema (Opciones de desarrollador). 100% iguala la velocidad del sistema.</string>
+    <string name="recents_blur_module_install">Instalar módulo de soporte de desenfoque</string>
+    <string name="recents_blur_module_remove">Quitar módulo de soporte de desenfoque</string>
+    <string name="recents_blur_module_hint">Este ROM no declara soporte de desenfoque de fondo, así que el slider está desactivado. El módulo fija ro.surface_flinger.supports_background_blur=1 al arrancar (igual que el módulo Enable Blurs). Requiere root y reiniciar; se aplica a todo el sistema y puede restar fluidez en esta GPU.</string>
+    <string name="recents_blur_module_pending">Módulo instalado. Reinicia para aplicarlo.</string>
 </resources>

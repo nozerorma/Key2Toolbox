@@ -608,4 +608,8 @@
     <string name="recents_slim_anim_duration">Durata dell\'animazione</string>
     <string name="recents_slim_anim_off">Disattivata</string>
     <string name="recents_slim_anim_hint">Moltiplica il tempo di base e segue la scala delle animazioni di sistema (Opzioni sviluppatore). 100% corrisponde alla velocità di sistema.</string>
+    <string name="recents_blur_module_install">Installa il modulo di supporto alla sfocatura</string>
+    <string name="recents_blur_module_remove">Rimuovi il modulo di supporto alla sfocatura</string>
+    <string name="recents_blur_module_hint">Questa ROM non dichiara la sfocatura dello sfondo, quindi il cursore è disattivato. Il modulo imposta ro.surface_flinger.supports_background_blur=1 all\'avvio (come il modulo Enable Blurs). Richiede root e un riavvio; vale per tutto il sistema e può ridurre la fluidità su questa GPU.</string>
+    <string name="recents_blur_module_pending">Modulo installato. Riavvia per applicarlo.</string>
 </resources>

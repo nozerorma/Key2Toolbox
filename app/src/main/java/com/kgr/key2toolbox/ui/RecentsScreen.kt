@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kgr.key2toolbox.R
+import com.kgr.key2toolbox.modules.BlurSupportController
 import com.kgr.key2toolbox.modules.RecentsController
 import com.kgr.key2toolbox.modules.RecentsController.LayoutMode
 import com.kgr.key2toolbox.modules.SlimRecentsController
@@ -60,6 +61,18 @@ fun RecentsScreen(onBack: () -> Unit) {
     val blurSupported = remember {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).isCrossWindowBlurEnabled
+    }
+
+    // Optional module that makes this ROM advertise blur support (reboot needed).
+    var blurModule by remember { mutableStateOf<Boolean?>(null) } // installed?
+    var blurUpstream by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val bi = BlurSupportController.isInstalled()
+            val bu = BlurSupportController.isUpstreamOnly()
+            withContext(Dispatchers.Main) { blurModule = bi; blurUpstream = bu }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -175,6 +188,40 @@ fun RecentsScreen(onBack: () -> Unit) {
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+            }
+            // Offer the module while blur is unavailable, and keep it removable once installed.
+            val installed = blurModule
+            if (installed != null && (!blurSupported || installed)) {
+                Text(
+                    stringResource(R.string.recents_blur_module_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                if (installed && !blurSupported) {
+                    Text(
+                        stringResource(R.string.recents_blur_module_pending),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+                if (!blurUpstream) {
+                    OutlinedButton(
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                if (installed) BlurSupportController.uninstall() else BlurSupportController.install()
+                                val now = BlurSupportController.isInstalled()
+                                withContext(Dispatchers.Main) { blurModule = now }
+                            }
+                        }
+                    ) {
+                        Text(
+                            stringResource(
+                                if (installed) R.string.recents_blur_module_remove
+                                else R.string.recents_blur_module_install
+                            )
+                        )
+                    }
+                }
             }
             IntSliderRow(
                 label = stringResource(R.string.recents_slim_anim_duration),

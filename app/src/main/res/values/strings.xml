@@ -669,4 +669,8 @@
     <string name="recents_slim_anim_duration">Animation duration</string>
     <string name="recents_slim_anim_off">Off</string>
     <string name="recents_slim_anim_hint">Multiplies the base time and follows the system animation scale (Developer options). 100% matches the system speed.</string>
+    <string name="recents_blur_module_install">Install blur support module</string>
+    <string name="recents_blur_module_remove">Remove blur support module</string>
+    <string name="recents_blur_module_hint">This ROM does not advertise background blur, so the slider is off. The module sets ro.surface_flinger.supports_background_blur=1 at boot (same as the Enable Blurs module). Needs root and a reboot; applies system-wide and may cost smoothness on this GPU.</string>
+    <string name="recents_blur_module_pending">Module installed. Reboot to apply.</string>
 </resources>

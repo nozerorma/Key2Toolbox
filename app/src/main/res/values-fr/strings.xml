@@ -608,4 +608,8 @@
     <string name="recents_slim_anim_duration">Durée de l\'animation</string>
     <string name="recents_slim_anim_off">Désactivée</string>
     <string name="recents_slim_anim_hint">Multiplie la durée de base et suit l\'échelle d\'animation du système (Options pour les développeurs). 100 % correspond à la vitesse du système.</string>
+    <string name="recents_blur_module_install">Installer le module de prise en charge du flou</string>
+    <string name="recents_blur_module_remove">Retirer le module de prise en charge du flou</string>
+    <string name="recents_blur_module_hint">Cette ROM n\'annonce pas le flou d\'arrière-plan, le curseur est donc désactivé. Le module définit ro.surface_flinger.supports_background_blur=1 au démarrage (comme le module Enable Blurs). Nécessite root et un redémarrage ; s\'applique à tout le système et peut réduire la fluidité sur ce GPU.</string>
+    <string name="recents_blur_module_pending">Module installé. Redémarrez pour l\'appliquer.</string>
 </resources>

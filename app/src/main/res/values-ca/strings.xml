@@ -608,4 +608,8 @@
     <string name="recents_slim_anim_duration">Durada de l\'animació</string>
     <string name="recents_slim_anim_off">Desactivada</string>
     <string name="recents_slim_anim_hint">Multiplica el temps base i segueix l\'escala d\'animació del sistema (Opcions de desenvolupador). 100% iguala la velocitat del sistema.</string>
+    <string name="recents_blur_module_install">Instal·la el mòdul de suport de desenfocament</string>
+    <string name="recents_blur_module_remove">Treu el mòdul de suport de desenfocament</string>
+    <string name="recents_blur_module_hint">Aquest ROM no declara suport de desenfocament de fons, així que el control està desactivat. El mòdul fixa ro.surface_flinger.supports_background_blur=1 a l\'arrencada (igual que el mòdul Enable Blurs). Cal root i reiniciar; s\'aplica a tot el sistema i pot restar fluïdesa en aquesta GPU.</string>
+    <string name="recents_blur_module_pending">Mòdul instal·lat. Reinicia per aplicar-lo.</string>
 </resources>
