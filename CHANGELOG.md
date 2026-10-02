@@ -28,6 +28,20 @@ All notable changes to Key2 Toolbox are documented here.
   is reset during boot, so enabling the toggle also installs a `service.d`
   script that re-applies it after boot (then watches for drift); turning it off
   removes the script.
+- **Masonry: tile expansion/entrance animation** (from Q25 Toolbox). Opening, the
+  newest tile shrinks from full screen into place while the rest rise in; closing,
+  the tapped tile (or the newest, on Back) grows to full screen as the scrim fades.
+  Tapping the app already in front no longer runs `am start` (it re-triggered the
+  app's launch transition). Duration 0 % creates no animators at all.
+- **Telemetry: per-app blocklist is now in backups** and is rewritten to the root
+  watchdog's file on restore (it was skipped, so a restore left the list empty).
+- **AdBlock: fallback hosts mount.** If the root manager does not overlay the
+  module's hosts file, a `service.sh` bind-mounts it over `/system/etc/hosts` (no-op
+  where the overlay already works); also applied right after install and once per
+  app launch.
+- **Recents: optional "blur support" module** for ROMs that do not advertise
+  background blur (the Key2's does not); install/remove from the Recents screen,
+  reboot to apply.
 - **Slim List / Masonry: background blur and animation duration** (ported from
   Q25 Toolbox). The overlay now eases in and out (scale + fade); the Recents
   screen gets a blur slider (cross-window blur, Android 12+, hidden by battery
