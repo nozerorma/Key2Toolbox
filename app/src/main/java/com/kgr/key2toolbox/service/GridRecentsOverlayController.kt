@@ -65,6 +65,9 @@ object GridRecentsOverlayController {
     private const val CLOSE_MS = 170L
     private const val CLOSE_SCALE = 0.96f
 
+    /** Default-style marker for [hide]: grow the focused (newest) tile, as Masonry does on Back. Null = plain fade. */
+    const val EXPAND_HERO = Int.MIN_VALUE
+
     private val ioExecutor = Executors.newSingleThreadExecutor()
 
     private var windowManager: WindowManager? = null
@@ -208,6 +211,7 @@ object GridRecentsOverlayController {
      * off, teardown). [isShowing] turns false immediately either way.
      */
     fun hide(animate: Boolean = true, expandTaskId: Int? = null) = safeUi {
+        val wanted = if (expandTaskId == EXPAND_HERO) currentTasks.firstOrNull()?.taskId else expandTaskId
         val v = root
         val tiles = HashMap(tileViews)
         val thumbs = HashMap(thumbViews)
@@ -220,8 +224,8 @@ object GridRecentsOverlayController {
         }
         v.animate().cancel()
         if (!animate || animMs(v.context, CLOSE_MS) <= 0L) { remove(); return@safeUi }
-        val target = expandTaskId?.let { tiles[it] }
-        val targetThumb = expandTaskId?.let { thumbs[it] }
+        val target = wanted?.let { tiles[it] }
+        val targetThumb = wanted?.let { thumbs[it] }
         if (target != null && targetThumb != null) {
             expandAndFade(v, tiles, headers, closeAll, target, targetThumb, remove)
         } else {
@@ -267,7 +271,7 @@ object GridRecentsOverlayController {
                     MotionEvent.ACTION_DOWN -> { downX = ev.rawX; downY = ev.rawY; moved = false }
                     MotionEvent.ACTION_MOVE ->
                         if (kotlin.math.abs(ev.rawX - downX) > slop || kotlin.math.abs(ev.rawY - downY) > slop) moved = true
-                    MotionEvent.ACTION_UP -> if (!moved) hide()
+                    MotionEvent.ACTION_UP -> if (!moved) hide(expandTaskId = EXPAND_HERO)
                 }
             } catch (t: Throwable) {
                 Log.e("Key2Toolbox", "GridRecents background touch failed", t)
@@ -562,6 +566,7 @@ object GridRecentsOverlayController {
     private fun playEntrance(svc: AccessibilityService) {
         val window = root ?: return
         val dur = animMs(svc, ENTRANCE_MS)
+        Log.d("Key2Toolbox", "GridRecents.entrance dur=$dur tiles=${tileViews.size}")
         if (dur <= 0L) return
         val ease = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
         val density = svc.resources.displayMetrics.density
@@ -588,6 +593,7 @@ object GridRecentsOverlayController {
             }
         }
         val t = if (hero != null && thumb != null) cover(svc, hero, thumb) else null
+        Log.d("Key2Toolbox", "GridRecents.entrance hero=${hero != null} cover=${t != null}")
         if (hero == null || t == null) return
         hero.translationZ = 8f
         hero.pivotX = t.pivotX; hero.pivotY = t.pivotY

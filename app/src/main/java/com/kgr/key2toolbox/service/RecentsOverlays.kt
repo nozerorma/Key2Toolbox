@@ -7,11 +7,11 @@ object RecentsOverlays {
 
     /**
      * Closes whichever is showing. [animate] = false removes it at once (screen off, teardown).
-     * [expandTaskId] only applies to the Masonry quilt (see [SlimRecentsOverlayController.hide]); the grid
-     * only expands the tile you tap, so Back / Home / Toolbelt close it with a plain fade.
+     * [expandTaskId] picks the tile that grows to full screen as the exit: the default grows the newest one
+     * (Back), null is a plain fade (Home, Toolbelt presses). Both overlays share the same marker value.
      */
     fun hide(animate: Boolean = true, expandTaskId: Int? = SlimRecentsOverlayController.EXPAND_HERO) {
         if (SlimRecentsOverlayController.isShowing()) SlimRecentsOverlayController.hide(animate, expandTaskId)
-        if (GridRecentsOverlayController.isShowing()) GridRecentsOverlayController.hide(animate)
+        if (GridRecentsOverlayController.isShowing()) GridRecentsOverlayController.hide(animate, expandTaskId)
     }
 }
