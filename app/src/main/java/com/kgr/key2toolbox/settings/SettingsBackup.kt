@@ -124,6 +124,7 @@ object SettingsBackup {
         ToolbeltController.KEY_ICON_SCALE to BackupModule.TOOLBELT,
         ToolbeltController.KEY_HAPTIC to BackupModule.TOOLBELT,
         ToolbeltController.KEY_COLOR_MODE to BackupModule.TOOLBELT,
+        ToolbeltController.KEY_BELT_KEEP_APPS to BackupModule.TOOLBELT,
         ToolbeltController.KEY_PRIVACY_INDICATOR_OFF to BackupModule.TOOLBELT
     )
 

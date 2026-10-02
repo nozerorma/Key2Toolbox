@@ -660,4 +660,8 @@
     <string name="status_pocket_kbd_lock_enabled">Lockscreen keyboard lock enabled.</string>
     <string name="status_pocket_kbd_lock_disabled">Lockscreen keyboard lock disabled.</string>
 
+    <string name="toolbelt_statusbar_choose">Choose apps</string>
+    <string name="toolbelt_statusbar_apps_count">%1$d selected of %2$d apps</string>
+    <string name="toolbelt_keep_apps">Keep the belt in selected fullscreen apps</string>
+    <string name="toolbelt_keep_hint">In the chosen apps the belt stays visible even when the app hides the status bar or goes fullscreen (e.g. a launcher with its own hide-status-bar option). Selected: %1$d.</string>
 </resources>

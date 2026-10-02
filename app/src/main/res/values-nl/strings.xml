@@ -599,4 +599,8 @@
     </string-array>    <string name="telemetry_show_details">Status per app tonen (%1$d)</string>
     <string name="telemetry_hide_details">Status per app verbergen</string>
     <string name="telemetry_surface_blocked">geblokkeerd</string>
-    <string name="telemetry_surface_leaking">actief</string></resources>
+    <string name="telemetry_surface_leaking">actief</string>    <string name="toolbelt_statusbar_choose">Apps kiezen</string>
+    <string name="toolbelt_statusbar_apps_count">%1$d van %2$d apps geselecteerd</string>
+    <string name="toolbelt_keep_apps">Balk behouden in gekozen volledig-scherm-apps</string>
+    <string name="toolbelt_keep_hint">In de gekozen apps blijft de balk zichtbaar, ook als de app de statusbalk verbergt of naar volledig scherm gaat (bijv. een launcher met een eigen optie om de statusbalk te verbergen). Geselecteerd: %1$d.</string>
+</resources>

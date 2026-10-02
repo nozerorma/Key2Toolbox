@@ -10,6 +10,9 @@ All notable changes to Key2 Toolbox are documented here.
   `KEYCODE_SEARCH` (spawns the system / app search); *Open Menu* sends
   `KEYCODE_MENU` (opens the foreground app's options menu). Both run on the root
   worker. A magnifying-glass icon joins the slot icon picker.
+- **Toolbelt: keep the belt in chosen fullscreen apps.** A second per-app list
+  exempts apps from the fullscreen auto-hide, for launchers that hide their own
+  status bar. Launchers (home apps) now appear in the app pickers.
 
 ### Changed
 
@@ -20,6 +23,14 @@ All notable changes to Key2 Toolbox are documented here.
   snapshots stream in behind it. App label/icon lookups and the per-app banner
   colours are cached and pre-warmed off the main thread. Cold open ~2 s → first
   frame in tens of ms; a warm re-open paints snapshots in ~150 ms.
+
+- **Location icon suppression now survives reboots.** The `device_config` flag
+  is reset during boot, so enabling the toggle also installs a `service.d`
+  script that re-applies it after boot (then watches for drift); turning it off
+  removes the script.
+- **Toolbelt, transparent mode: keyboard strip no longer hides the belt.** The
+  belt stays and turns opaque black while only the physical-keyboard toolbar
+  strip is up (the full soft keyboard still hides it).
 
 ## [5.3.7] - 2026-08-31
 

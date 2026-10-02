@@ -599,4 +599,8 @@
     </string-array>    <string name="telemetry_show_details">Mostra l\'estat per app (%1$d)</string>
     <string name="telemetry_hide_details">Amaga l\'estat per app</string>
     <string name="telemetry_surface_blocked">blocat</string>
-    <string name="telemetry_surface_leaking">filtrant</string></resources>
+    <string name="telemetry_surface_leaking">filtrant</string>    <string name="toolbelt_statusbar_choose">Tria apps</string>
+    <string name="toolbelt_statusbar_apps_count">%1$d seleccionades de %2$d apps</string>
+    <string name="toolbelt_keep_apps">Mantén la barra a les apps a pantalla completa triades</string>
+    <string name="toolbelt_keep_hint">A les apps triades la barra continua visible encara que l\'app amagui la barra d\'estat o passi a pantalla completa (p. ex. un launcher amb la seva pròpia opció d\'amagar la barra d\'estat). Seleccionades: %1$d.</string>
+</resources>

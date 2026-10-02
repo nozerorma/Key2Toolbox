@@ -599,4 +599,8 @@
     </string-array>    <string name="telemetry_show_details">Mostra stato per app (%1$d)</string>
     <string name="telemetry_hide_details">Nascondi stato per app</string>
     <string name="telemetry_surface_blocked">bloccato</string>
-    <string name="telemetry_surface_leaking">attivo</string></resources>
+    <string name="telemetry_surface_leaking">attivo</string>    <string name="toolbelt_statusbar_choose">Scegli app</string>
+    <string name="toolbelt_statusbar_apps_count">%1$d selezionate su %2$d app</string>
+    <string name="toolbelt_keep_apps">Mantieni la barra nelle app a schermo intero scelte</string>
+    <string name="toolbelt_keep_hint">Nelle app scelte la barra resta visibile anche se l\'app nasconde la barra di stato o passa a schermo intero (es. un launcher con la propria opzione per nascondere la barra di stato). Selezionate: %1$d.</string>
+</resources>

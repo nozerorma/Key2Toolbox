@@ -183,6 +183,7 @@ class Key2AccessibilityService : AccessibilityService() {
             reconcileImeBlock()
         }
         if (key.startsWith("toolbelt_")) {
+            if (key == ToolbeltController.KEY_BELT_KEEP_APPS) ToolbeltOverlayController.setForegroundFullscreen(fullscreenCached && !beltExempt())
             // Anything that changes the reserved bottom inset needs a launcher
             // restart - the taskbar only re-reads that on recreation on this build.
             if (key == ToolbeltController.KEY_ENABLED ||
@@ -203,6 +204,16 @@ class Key2AccessibilityService : AccessibilityService() {
             }
             refreshToolbelt(rebuild = true)
         }
+    }
+
+    /**
+     * Apps whose belt ignores the fullscreen auto-hide: the explicit "keep belt"
+     * list, e.g. a launcher that hides its own status bar.
+     */
+    private fun beltExempt(): Boolean {
+        val sp = prefs ?: return false
+        val pkg = foregroundPkg ?: return false
+        return pkg in ToolbeltController.beltKeepApps(sp)
     }
 
     /** (Re)attach or detach the toolbelt overlay to match current settings. */
@@ -419,6 +430,10 @@ class Key2AccessibilityService : AccessibilityService() {
             ToolbeltController.pushGlobalActive(toolbeltOn)
             ToolbeltController.syncNavMode(this)
             ToolbeltController.pushInset(this)
+            // Installs the boot script for users who enabled the suppression before it existed.
+            if (ToolbeltController.isPrivacyIndicatorOff(prefs ?: return@execute) &&
+                !ToolbeltController.isIndicatorScriptInstalled()
+            ) ToolbeltController.applyLocationIndicator(this, true)
             mainHandler.post { refreshToolbelt(rebuild = true) }
         }
 
@@ -789,7 +804,7 @@ class Key2AccessibilityService : AccessibilityService() {
         // short physical-keyboard toolbar strip - the belt hides for that too in
         // translucent mode, where it would otherwise show through.
         ToolbeltOverlayController.setImeVisible(imeActive, anyImeWindow())
-        ToolbeltOverlayController.setForegroundFullscreen(fullscreenCached)
+        ToolbeltOverlayController.setForegroundFullscreen(fullscreenCached && !beltExempt())
         refreshToolbelt()
         scheduleFullscreenProbe(event, pkgChanged)
 
@@ -873,7 +888,7 @@ class Key2AccessibilityService : AccessibilityService() {
             if (value != fullscreenCached) {
                 fullscreenCached = value
                 mainHandler.post {
-                    ToolbeltOverlayController.setForegroundFullscreen(value)
+                    ToolbeltOverlayController.setForegroundFullscreen(value && !beltExempt())
                     refreshToolbelt()
                 }
             }

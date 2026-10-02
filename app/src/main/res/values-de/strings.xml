@@ -599,4 +599,8 @@
     </string-array>    <string name="telemetry_show_details">Status pro App anzeigen (%1$d)</string>
     <string name="telemetry_hide_details">Status pro App ausblenden</string>
     <string name="telemetry_surface_blocked">blockiert</string>
-    <string name="telemetry_surface_leaking">aktiv</string></resources>
+    <string name="telemetry_surface_leaking">aktiv</string>    <string name="toolbelt_statusbar_choose">Apps wählen</string>
+    <string name="toolbelt_statusbar_apps_count">%1$d von %2$d Apps ausgewählt</string>
+    <string name="toolbelt_keep_apps">Leiste in ausgewählten Vollbild-Apps beibehalten</string>
+    <string name="toolbelt_keep_hint">In den gewählten Apps bleibt die Leiste sichtbar, auch wenn die App die Statusleiste ausblendet oder in den Vollbildmodus wechselt (z. B. ein Launcher mit eigener Option zum Ausblenden der Statusleiste). Ausgewählt: %1$d.</string>
+</resources>

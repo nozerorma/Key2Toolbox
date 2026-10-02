@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.DrawableRes
 import com.kgr.key2toolbox.R
+import com.kgr.key2toolbox.core.AssetInstaller
 import com.kgr.key2toolbox.core.RootShell
 import org.json.JSONArray
 import org.json.JSONObject
@@ -42,12 +43,15 @@ object ToolbeltController {
     const val KEY_HAPTIC = "toolbelt_haptic"               // 0 off / 1 light / 2 medium / 3 strong
     const val KEY_COLOR_MODE = "toolbelt_color_mode"       // 0 fixed / 1 material-you / 2 follow-app
     const val KEY_BAR_OPACITY = "toolbelt_bar_opacity"     // percent, 0-100; applies on top of any color mode
+    const val KEY_BELT_KEEP_APPS = "toolbelt_belt_keep_apps"       // packages where the belt ignores fullscreen auto-hide
     const val KEY_PRIVACY_INDICATOR_OFF = "toolbelt_privacy_indicator_off" // suppress the location privacy icon
 
     // device_config knob for the status-bar location icon. When an app reads
     // location while a fullscreen app is foreground, the system forces a transient
     // system-bar reveal to show this icon - which pops the nav bar / belt back on
     // top of the app. Turning it off system-wide stops that.
+    private const val INDICATOR_SCRIPT = "location_indicator_off.sh"
+    private const val INDICATOR_TARGET = "/data/adb/service.d/$INDICATOR_SCRIPT"
     private const val DC_PRIVACY_NS = "privacy"
     private const val DC_LOCATION_INDICATOR = "location_indicators_enabled"
 
@@ -263,6 +267,9 @@ object ToolbeltController {
         pushGlobalActive(enabled)
     }
 
+    fun beltKeepApps(sp: SharedPreferences): Set<String> =
+        sp.getStringSet(KEY_BELT_KEEP_APPS, emptySet()) ?: emptySet()
+
     fun pushGlobalActive(active: Boolean) {
         RootShell.run("settings put global $GLOBAL_ACTIVE ${if (active) 1 else 0}")
     }
@@ -278,6 +285,9 @@ object ToolbeltController {
         "false" -> false
         else -> null
     }
+
+    /** Whether the boot script that re-applies the suppression is installed. */
+    fun isIndicatorScriptInstalled(): Boolean = AssetInstaller.fileExists(INDICATOR_TARGET)
 
     /** The live value of the location-indicator flag, read with root. `null` = couldn't read. */
     fun readLocationIndicatorEnabled(): Boolean? =
@@ -299,6 +309,10 @@ object ToolbeltController {
             append("device_config get $DC_PRIVACY_NS $DC_LOCATION_INDICATOR")
         }
         val lastLine = RootShell.run(cmd).outString.trim().lines().lastOrNull().orEmpty()
+        // The flag is reset during boot, so persist the intent with a service.d
+        // script that re-applies it (removed again when the icon is restored).
+        if (suppress) AssetInstaller.installFromAsset(context, INDICATOR_SCRIPT, INDICATOR_TARGET)
+        else AssetInstaller.removeFile(INDICATOR_TARGET)
         return parseFlag(lastLine)
     }
 
