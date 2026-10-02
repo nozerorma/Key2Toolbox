@@ -84,6 +84,7 @@ object SlimRecentsOverlayController {
     private val ioExecutor = Executors.newSingleThreadExecutor()
 
     private var windowManager: WindowManager? = null
+    private var windowParams: WindowManager.LayoutParams? = null
     private var root: FrameLayout? = null
     private var currentTasks: List<SlimTask> = emptyList()
     private var currentSnapshots: Map<Int, android.graphics.Bitmap> = emptyMap()
@@ -312,8 +313,11 @@ object SlimRecentsOverlayController {
             // Duration 0 (setting or system animator scale off): no animators at all, just drop the window.
             val animating = animate && animMs(v.context, CLOSE_MS) > 0L
             if (animating && cardsMode && target != null && targetThumb != null) {
+                OverlayBlur.fadeOut(windowManager, v, windowParams,
+                    animMs(v.context, EXPAND_MS) + animMs(v.context, EXPAND_FADE_TAIL_MS))
                 expandAndFade(v, cards, headers, target, targetThumb, remove)
             } else if (animating) {
+                OverlayBlur.fadeOut(windowManager, v, windowParams, animMs(v.context, CLOSE_MS))
                 v.animate()
                     .alpha(0f).scaleX(CLOSE_SCALE).scaleY(CLOSE_SCALE)
                     .setDuration(animMs(v.context, CLOSE_MS))
@@ -576,6 +580,7 @@ object SlimRecentsOverlayController {
         }
         pendingEntrance = cardsMode
         windowManager = wm
+        windowParams = lp
         root = container
         buildRows(svc, list, tasks)
     }

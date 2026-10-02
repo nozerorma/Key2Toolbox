@@ -71,6 +71,7 @@ object GridRecentsOverlayController {
     private val ioExecutor = Executors.newSingleThreadExecutor()
 
     private var windowManager: WindowManager? = null
+    private var windowParams: WindowManager.LayoutParams? = null
     private var root: FrameLayout? = null
     private var scroller: HorizontalScrollView? = null
     private var content: FrameLayout? = null
@@ -217,6 +218,7 @@ object GridRecentsOverlayController {
         val thumbs = HashMap(thumbViews)
         val headers = HashMap(headerViews)
         val closeAll = closeAllView
+        val params = windowParams
         clearState()
         if (v == null) return@safeUi
         val remove: () -> Unit = {
@@ -227,8 +229,10 @@ object GridRecentsOverlayController {
         val target = wanted?.let { tiles[it] }
         val targetThumb = wanted?.let { thumbs[it] }
         if (target != null && targetThumb != null) {
+            OverlayBlur.fadeOut(windowManager, v, params, animMs(v.context, EXPAND_MS) + animMs(v.context, 60L))
             expandAndFade(v, tiles, headers, closeAll, target, targetThumb, remove)
         } else {
+            OverlayBlur.fadeOut(windowManager, v, params, animMs(v.context, CLOSE_MS))
             v.animate().alpha(0f).scaleX(CLOSE_SCALE).scaleY(CLOSE_SCALE)
                 .setDuration(animMs(v.context, CLOSE_MS))
                 .setInterpolator(PathInterpolator(0.3f, 0f, 0.8f, 0.15f))
@@ -237,7 +241,7 @@ object GridRecentsOverlayController {
     }
 
     private fun clearState() {
-        root = null; scroller = null; content = null
+        root = null; scroller = null; content = null; windowParams = null
         tileViews.clear(); thumbViews.clear(); headerViews.clear(); tileDist.clear(); closeAllView = null
         snapshots = emptyMap(); pendingEntrance = false
     }
@@ -300,6 +304,7 @@ object GridRecentsOverlayController {
         }
         try { wm.addView(container, lp) } catch (_: Exception) { return }
         windowManager = wm
+        windowParams = lp
         root = container; scroller = hsv; content = area
         pendingEntrance = true
         buildTiles(svc, tasks)
