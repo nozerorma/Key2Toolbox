@@ -664,4 +664,9 @@
     <string name="toolbelt_statusbar_apps_count">%1$d selected of %2$d apps</string>
     <string name="toolbelt_keep_apps">Keep the belt in selected fullscreen apps</string>
     <string name="toolbelt_keep_hint">In the chosen apps the belt stays visible even when the app hides the status bar or goes fullscreen (e.g. a launcher with its own hide-status-bar option). Selected: %1$d.</string>
+    <string name="recents_slim_scrim_blur">Background blur</string>
+    <string name="recents_slim_blur_unsupported">Blur is unavailable right now (the system turns it off, for example in battery saver).</string>
+    <string name="recents_slim_anim_duration">Animation duration</string>
+    <string name="recents_slim_anim_off">Off</string>
+    <string name="recents_slim_anim_hint">Multiplies the base time and follows the system animation scale (Developer options). 100% matches the system speed.</string>
 </resources>

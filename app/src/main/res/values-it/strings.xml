@@ -603,4 +603,9 @@
     <string name="toolbelt_statusbar_apps_count">%1$d selezionate su %2$d app</string>
     <string name="toolbelt_keep_apps">Mantieni la barra nelle app a schermo intero scelte</string>
     <string name="toolbelt_keep_hint">Nelle app scelte la barra resta visibile anche se l\'app nasconde la barra di stato o passa a schermo intero (es. un launcher con la propria opzione per nascondere la barra di stato). Selezionate: %1$d.</string>
+    <string name="recents_slim_scrim_blur">Sfocatura dello sfondo</string>
+    <string name="recents_slim_blur_unsupported">La sfocatura non è disponibile al momento (il sistema la disattiva, ad esempio con il risparmio energetico).</string>
+    <string name="recents_slim_anim_duration">Durata dell\'animazione</string>
+    <string name="recents_slim_anim_off">Disattivata</string>
+    <string name="recents_slim_anim_hint">Moltiplica il tempo di base e segue la scala delle animazioni di sistema (Opzioni sviluppatore). 100% corrisponde alla velocità di sistema.</string>
 </resources>

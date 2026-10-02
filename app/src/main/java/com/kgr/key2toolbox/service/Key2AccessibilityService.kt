@@ -445,7 +445,7 @@ class Key2AccessibilityService : AccessibilityService() {
                     // keyguard and doesn't tear itself down just because the
                     // screen locked - close it immediately so it can never be
                     // sitting in front of the lock screen on wake.
-                    SlimRecentsOverlayController.hide()
+                    SlimRecentsOverlayController.hide(animate = false)
                     return
                 }
                 forceReconcile()

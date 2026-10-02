@@ -603,4 +603,9 @@
     <string name="toolbelt_statusbar_apps_count">%1$d van %2$d apps geselecteerd</string>
     <string name="toolbelt_keep_apps">Balk behouden in gekozen volledig-scherm-apps</string>
     <string name="toolbelt_keep_hint">In de gekozen apps blijft de balk zichtbaar, ook als de app de statusbalk verbergt of naar volledig scherm gaat (bijv. een launcher met een eigen optie om de statusbalk te verbergen). Geselecteerd: %1$d.</string>
+    <string name="recents_slim_scrim_blur">Achtergrondvervaging</string>
+    <string name="recents_slim_blur_unsupported">Vervaging is nu niet beschikbaar (het systeem schakelt deze uit, bijvoorbeeld in batterijbesparing).</string>
+    <string name="recents_slim_anim_duration">Animatieduur</string>
+    <string name="recents_slim_anim_off">Uit</string>
+    <string name="recents_slim_anim_hint">Vermenigvuldigt de basistijd en volgt de systeemanimatieschaal (Ontwikkelaarsopties). 100% komt overeen met de systeemsnelheid.</string>
 </resources>

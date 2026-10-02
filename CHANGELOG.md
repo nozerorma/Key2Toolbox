@@ -28,6 +28,11 @@ All notable changes to Key2 Toolbox are documented here.
   is reset during boot, so enabling the toggle also installs a `service.d`
   script that re-applies it after boot (then watches for drift); turning it off
   removes the script.
+- **Slim List / Masonry: background blur and animation duration** (ported from
+  Q25 Toolbox). The overlay now eases in and out (scale + fade); the Recents
+  screen gets a blur slider (cross-window blur, Android 12+, hidden by battery
+  saver) and an animation-duration slider (0 = off, follows the system
+  animation scale).
 - **Toolbelt, transparent mode: keyboard strip no longer hides the belt.** The
   belt stays and turns opaque black while only the physical-keyboard toolbar
   strip is up (the full soft keyboard still hides it).

@@ -236,6 +236,22 @@ object SlimRecentsController {
      *  hardcoded Color.argb(200, 0, 0, 0) (200/255 ≈ 78%) unchanged. */
     const val KEY_SCRIM_OPACITY = "recents_slim_scrim_opacity"
 
+    /** Blur behind the overlay, percent 0-100 (0 = off). Needs cross-window blur support (Android 12+). */
+    const val KEY_SCRIM_BLUR = "recents_slim_scrim_blur"
+
+    fun scrimBlurPercent(sp: SharedPreferences): Int =
+        sp.getInt(KEY_SCRIM_BLUR, 0).coerceIn(0, 100)
+
+    /** Blur radius in px for the overlay window: 1% = 1dp, so 100% is a 100dp radius. */
+    fun scrimBlurRadiusPx(context: Context): Int =
+        (scrimBlurPercent(prefs(context)) * context.resources.displayMetrics.density).toInt()
+
+    /** Open/close animation length as a percent of the built-in base (0 = no animation). */
+    const val KEY_ANIM_DURATION = "recents_slim_anim_duration"
+
+    fun animDurationPercent(sp: SharedPreferences): Int =
+        sp.getInt(KEY_ANIM_DURATION, 100).coerceIn(0, 200)
+
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(ToolbeltController.PREFS, Context.MODE_PRIVATE)
 

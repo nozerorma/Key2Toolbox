@@ -603,4 +603,9 @@
     <string name="toolbelt_statusbar_apps_count">%1$d seleccionadas de %2$d apps</string>
     <string name="toolbelt_keep_apps">Mantener la barra en apps a pantalla completa elegidas</string>
     <string name="toolbelt_keep_hint">En las apps elegidas la barra permanece visible aunque la app oculte la barra de estado o pase a pantalla completa (p. ej. un launcher con su propia opción de ocultar la barra de estado). Seleccionadas: %1$d.</string>
+    <string name="recents_slim_scrim_blur">Desenfoque del fondo</string>
+    <string name="recents_slim_blur_unsupported">El desenfoque no está disponible ahora (el sistema lo desactiva, por ejemplo con el ahorro de batería).</string>
+    <string name="recents_slim_anim_duration">Duración de la animación</string>
+    <string name="recents_slim_anim_off">Desactivada</string>
+    <string name="recents_slim_anim_hint">Multiplica el tiempo base y sigue la escala de animación del sistema (Opciones de desarrollador). 100% iguala la velocidad del sistema.</string>
 </resources>

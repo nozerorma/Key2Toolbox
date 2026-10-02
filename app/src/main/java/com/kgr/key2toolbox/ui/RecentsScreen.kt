@@ -1,5 +1,8 @@
 package com.kgr.key2toolbox.ui
 
+import android.content.Context
+import android.os.Build
+import android.view.WindowManager
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,6 +54,13 @@ fun RecentsScreen(onBack: () -> Unit) {
     var scrim by remember { mutableFloatStateOf(1f) }
     var scrimColorMode by remember { mutableStateOf(SlimRecentsController.scrimColorMode(prefs)) }
     var scrimOpacity by remember { mutableStateOf(SlimRecentsController.scrimOpacityPercent(prefs)) }
+    var scrimBlur by remember { mutableStateOf(SlimRecentsController.scrimBlurPercent(prefs)) }
+    var animPct by remember { mutableStateOf(SlimRecentsController.animDurationPercent(prefs)) }
+    // Cross-window blur can be unavailable (battery saver, unsupported GPU path): say so instead of a dead slider.
+    val blurSupported = remember {
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).isCrossWindowBlurEnabled
+    }
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
@@ -150,6 +160,35 @@ fun RecentsScreen(onBack: () -> Unit) {
                 onChange = { scrimOpacity = it }, onCommit = {
                     prefs.edit().putInt(SlimRecentsController.KEY_SCRIM_OPACITY, scrimOpacity).apply()
                 }
+            )
+            IntSliderRow(
+                label = stringResource(R.string.recents_slim_scrim_blur),
+                value = scrimBlur, valueText = if (blurSupported) "$scrimBlur%" else "-",
+                range = 0f..100f, steps = 19,
+                onChange = { if (blurSupported) scrimBlur = it }, onCommit = {
+                    if (blurSupported) prefs.edit().putInt(SlimRecentsController.KEY_SCRIM_BLUR, scrimBlur).apply()
+                }
+            )
+            if (!blurSupported) {
+                Text(
+                    stringResource(R.string.recents_slim_blur_unsupported),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IntSliderRow(
+                label = stringResource(R.string.recents_slim_anim_duration),
+                value = animPct,
+                valueText = if (animPct == 0) stringResource(R.string.recents_slim_anim_off) else "$animPct%",
+                range = 0f..200f, steps = 19,
+                onChange = { animPct = it }, onCommit = {
+                    prefs.edit().putInt(SlimRecentsController.KEY_ANIM_DURATION, animPct).apply()
+                }
+            )
+            Text(
+                stringResource(R.string.recents_slim_anim_hint),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 

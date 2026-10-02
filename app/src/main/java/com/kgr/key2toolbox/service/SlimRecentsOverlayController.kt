@@ -3,6 +3,7 @@ package com.kgr.key2toolbox.service
 import android.accessibilityservice.AccessibilityService
 import android.content.Context
 import android.content.Intent
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
@@ -17,6 +18,7 @@ import android.view.VelocityTracker
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.animation.PathInterpolator
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -53,6 +55,13 @@ object SlimRecentsOverlayController {
 
     /** Fixed name-strip height (dp) - icon + name + close, above the snapshot. */
     private const val CARD_HEADER_DP = 30
+
+    // Open/close motion: a quick scale-up + fade with the Material "emphasized" curves, close to the
+    // system Overview entrance. Scale is subtle because the whole window scales, not individual tiles.
+    private const val OPEN_SCALE = 0.93f
+    private const val OPEN_MS = 280L
+    private const val CLOSE_SCALE = 0.96f
+    private const val CLOSE_MS = 170L
 
     // Resume / dismiss issue root shell commands - never run those on the
     // main thread that's servicing row touch events.
@@ -185,6 +194,21 @@ object SlimRecentsOverlayController {
         menuCard = card
     }
 
+    /**
+     * Length for a view-property animation: [baseMs] x the user's setting x the system animator scale.
+     * ViewPropertyAnimator's own ValueAnimator multiplies by [ValueAnimator.getDurationScale] on top, so
+     * that factor is divided out here; the effective time ends up as base x user x system exactly once.
+     * 0 (animations off) gives an instant change.
+     */
+    private fun animMs(ctx: Context, baseMs: Long): Long {
+        val sp = ctx.getSharedPreferences(ToolbeltController.PREFS, Context.MODE_PRIVATE)
+        val user = SlimRecentsController.animDurationPercent(sp) / 100f
+        val sys = Settings.Global.getFloat(ctx.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f)
+        val applied = ValueAnimator.getDurationScale()
+        if (user <= 0f || sys <= 0f || applied <= 0f) return 0L
+        return (baseMs * user * sys / applied).toLong()
+    }
+
     private fun closeIconMenu() {
         menuCard?.let { (it.parent as? ViewGroup)?.removeView(it) }
         menuScrim?.let { (it.parent as? ViewGroup)?.removeView(it) }
@@ -220,17 +244,30 @@ object SlimRecentsOverlayController {
         }
     }
 
-    fun hide() = safeUi {
+    /** [animate] = false tears the window down at once (lock screen, teardown). */
+    fun hide(animate: Boolean = true) = safeUi {
         closeIconMenu()
         currentSnapshots = emptyMap()
         thumbViews.clear()
         val v = root
         root = null
         if (v != null) {
-            try {
-                windowManager?.removeView(v)
-            } catch (_: IllegalArgumentException) {
+            val wm = windowManager
+            val remove: () -> Unit = {
+                try {
+                    wm?.removeView(v)
+                } catch (_: IllegalArgumentException) {
+                }
             }
+            if (animate) {
+                v.animate().cancel()
+                v.animate()
+                    .alpha(0f).scaleX(CLOSE_SCALE).scaleY(CLOSE_SCALE)
+                    .setDuration(animMs(v.context, CLOSE_MS))
+                    .setInterpolator(PathInterpolator(0.3f, 0f, 0.8f, 0.15f)) // emphasized accelerate
+                    .withEndAction { safeUi(remove) }
+                    .start()
+            } else remove()
         }
     }
 
@@ -345,13 +382,33 @@ object SlimRecentsOverlayController {
                 fitInsetsTypes = 0
                 fitInsetsSides = 0
             }
+            // Optional blur of whatever is behind the overlay (setting in Recents). Only when the system
+            // allows cross-window blur (off under battery saver or on devices without the feature).
+            val blur = SlimRecentsController.scrimBlurRadiusPx(svc)
+            if (blur > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && wm.isCrossWindowBlurEnabled) {
+                // FLAG_DIM_BEHIND is needed too: the blur is drawn through the window's dim layer, whose
+                // alpha comes from dimAmount (0 by default, so nothing blurred). A 1% dim is invisible and
+                // gives the layer a non-zero alpha. (Found with dumpsys on LineageOS 23 in Q25 Toolbox.)
+                flags = flags or WindowManager.LayoutParams.FLAG_BLUR_BEHIND or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                blurBehindRadius = blur
+                dimAmount = 0.01f
+            }
         }
 
+        // Start invisible and slightly small, then ease in (see OPEN_*).
+        container.alpha = 0f
+        container.scaleX = OPEN_SCALE
+        container.scaleY = OPEN_SCALE
         try {
             wm.addView(container, lp)
         } catch (_: Exception) {
             return
         }
+        container.animate()
+            .alpha(1f).scaleX(1f).scaleY(1f)
+            .setDuration(animMs(svc, OPEN_MS))
+            .setInterpolator(PathInterpolator(0.05f, 0.7f, 0.1f, 1f)) // emphasized decelerate
+            .start()
         windowManager = wm
         root = container
         buildRows(svc, list, tasks)

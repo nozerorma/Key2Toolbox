@@ -603,4 +603,9 @@
     <string name="toolbelt_statusbar_apps_count">%1$d seleccionades de %2$d apps</string>
     <string name="toolbelt_keep_apps">Mantén la barra a les apps a pantalla completa triades</string>
     <string name="toolbelt_keep_hint">A les apps triades la barra continua visible encara que l\'app amagui la barra d\'estat o passi a pantalla completa (p. ex. un launcher amb la seva pròpia opció d\'amagar la barra d\'estat). Seleccionades: %1$d.</string>
+    <string name="recents_slim_scrim_blur">Desenfocament del fons</string>
+    <string name="recents_slim_blur_unsupported">El desenfocament no està disponible ara (el sistema el desactiva, per exemple amb l\'estalvi de bateria).</string>
+    <string name="recents_slim_anim_duration">Durada de l\'animació</string>
+    <string name="recents_slim_anim_off">Desactivada</string>
+    <string name="recents_slim_anim_hint">Multiplica el temps base i segueix l\'escala d\'animació del sistema (Opcions de desenvolupador). 100% iguala la velocitat del sistema.</string>
 </resources>
