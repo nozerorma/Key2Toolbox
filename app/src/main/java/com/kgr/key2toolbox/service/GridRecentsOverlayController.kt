@@ -219,6 +219,7 @@ object GridRecentsOverlayController {
         val headers = HashMap(headerViews)
         val closeAll = closeAllView
         val params = windowParams
+        val shots = snapshots // before clearState(): only a tile with a real snapshot may expand (see below)
         clearState()
         if (v == null) return@safeUi
         val remove: () -> Unit = {
@@ -226,8 +227,11 @@ object GridRecentsOverlayController {
         }
         v.animate().cancel()
         if (!animate || animMs(v.context, CLOSE_MS) <= 0L) { remove(); return@safeUi }
-        val target = wanted?.let { tiles[it] }
-        val targetThumb = wanted?.let { thumbs[it] }
+        // The app in front (and the home screen) have no stored snapshot, so their tile is a dark placeholder;
+        // expanding it would cover the screen with a black rectangle. Plain fade in that case.
+        val canExpand = wanted != null && shots.containsKey(wanted)
+        val target = if (canExpand) tiles[wanted] else null
+        val targetThumb = if (canExpand) thumbs[wanted] else null
         if (target != null && targetThumb != null) {
             OverlayBlur.fadeOut(windowManager, v, params, animMs(v.context, EXPAND_MS) + animMs(v.context, 60L))
             expandAndFade(v, tiles, headers, closeAll, target, targetThumb, remove)
