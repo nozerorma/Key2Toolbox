@@ -241,6 +241,8 @@ class Key2AccessibilityService : AccessibilityService() {
      * stock-Overview branch or build the overlay on the calling thread.
      */
     private fun openRecents() {
+        // The app in front, captured BEFORE the overlay window goes up so it cannot be confused with it.
+        val frontPkg = foregroundPkg
         // Mode read is non-root (world-readable Global key) so it never adds
         // shell-spawn latency to this path.
         val mode = RecentsController.getLayoutMode(this)
@@ -258,7 +260,7 @@ class Key2AccessibilityService : AccessibilityService() {
                     // nothing below this blocks the first frame. Cards come up
                     // with a placeholder; snapshots stream in right after.
                     mainHandler.post {
-                        SlimRecentsOverlayController.show(this, tasks, cards)
+                        SlimRecentsOverlayController.show(this, tasks, cards, frontPkg)
                         // Slim List's window just attached above the Toolbelt's
                         // in z-order (both are TYPE_ACCESSIBILITY_OVERLAY from
                         // this app; whichever attaches most recently wins).
@@ -300,7 +302,7 @@ class Key2AccessibilityService : AccessibilityService() {
         // rather than a full close+reopen, so pre-closing it here would just
         // add an unnecessary flicker for that specific action.
         if (action != ToolbeltAction.RECENTS && SlimRecentsOverlayController.isShowing()) {
-            SlimRecentsOverlayController.hide()
+            SlimRecentsOverlayController.hide(expandTaskId = null)
         }
         when (action) {
             ToolbeltAction.NONE, ToolbeltAction.TOGGLE_BELT -> {} // handled in the overlay
@@ -795,6 +797,7 @@ class Key2AccessibilityService : AccessibilityService() {
         if (pkgChanged) {
             foregroundPkg = pkg
             reconcileImeBlock()
+            SlimRecentsOverlayController.onForegroundChanged(pkg!!)
         }
 
         // Toolbelt: keep the belt attached; slide it away while the soft keyboard
@@ -1084,7 +1087,7 @@ class Key2AccessibilityService : AccessibilityService() {
                 }
                 KeyEvent.KEYCODE_HOME -> {
                     if (event.action == KeyEvent.ACTION_DOWN) {
-                        SlimRecentsOverlayController.hide()
+                        SlimRecentsOverlayController.hide(expandTaskId = null)
                         performGlobalAction(GLOBAL_ACTION_HOME)
                     }
                     return true
