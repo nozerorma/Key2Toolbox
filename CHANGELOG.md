@@ -28,6 +28,13 @@ All notable changes to Key2 Toolbox are documented here.
   is reset during boot, so enabling the toggle also installs a `service.d`
   script that re-applies it after boot (then watches for drift); turning it off
   removes the script.
+- **Grid without LSPosed** (from Q25 Toolbox). A standalone two-row Grid overlay
+  (newest tile large on the right, older ones in two rows to its left, "Close all"
+  at the far end) now draws the Grid mode whenever the LSPosed module is not
+  detected; with the module, the launcher still draws it. Same animations, scrim,
+  blur and snapshots as the other overlays; the Recents screen says which path is
+  in use. Tile corner radius is adjustable for the overlay Grid (default 22 dp)
+  and for Masonry (default 0 = square).
 - **Masonry: tile expansion/entrance animation** (from Q25 Toolbox). Opening, the
   newest tile shrinks from full screen into place while the rest rise in; closing,
   the tapped tile (or the newest, on Back) grows to full screen as the scrim fades.

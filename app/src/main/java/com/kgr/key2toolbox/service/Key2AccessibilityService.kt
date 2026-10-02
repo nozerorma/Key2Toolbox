@@ -246,21 +246,27 @@ class Key2AccessibilityService : AccessibilityService() {
         // Mode read is non-root (world-readable Global key) so it never adds
         // shell-spawn latency to this path.
         val mode = RecentsController.getLayoutMode(this)
+        // Grid: with the LSPosed module active the launcher draws the grid itself (stock Overview, hooked);
+        // without it, draw our own standalone grid instead. isXposedActive() is true only when the module is
+        // enabled for this app, which the Recents screen asks the user to do.
+        val grid = mode == RecentsController.LayoutMode.GRID && !RecentsController.isXposedActive()
         val t0 = android.os.SystemClock.uptimeMillis()
         worker.execute {
             try {
-                if (mode.isOverlay) {
-                    val cards = mode == RecentsController.LayoutMode.MASONRY
+                if (mode.isOverlay || grid) {
+                    val masonry = mode == RecentsController.LayoutMode.MASONRY
+                    val cards = masonry || grid // the grid also shows snapshots
                     val tasks = SlimRecentsController.listTasks(this)
                     Log.d("Key2Toolbox", "openRecents: listTasks ${tasks.size} in ${android.os.SystemClock.uptimeMillis() - t0} ms")
                     // Warm the per-app banner colours here so the Palette passes
                     // don't stack up on the main thread mid-build.
-                    if (cards) SlimRecentsController.primeBannerColors(tasks)
+                    if (masonry) SlimRecentsController.primeBannerColors(tasks)
                     // Show the window straight after the (cheap) task list -
                     // nothing below this blocks the first frame. Cards come up
                     // with a placeholder; snapshots stream in right after.
                     mainHandler.post {
-                        SlimRecentsOverlayController.show(this, tasks, cards, frontPkg)
+                        if (grid) GridRecentsOverlayController.show(this, tasks, frontPkg)
+                        else SlimRecentsOverlayController.show(this, tasks, cards, frontPkg)
                         // Slim List's window just attached above the Toolbelt's
                         // in z-order (both are TYPE_ACCESSIBILITY_OVERLAY from
                         // this app; whichever attaches most recently wins).
@@ -280,7 +286,10 @@ class Key2AccessibilityService : AccessibilityService() {
                     // foreground task often), so we just use it like any other.
                     if (cards && tasks.isNotEmpty()) {
                         val snaps = SlimRecentsController.loadSnapshots(tasks.map { it.taskId })
-                        mainHandler.post { SlimRecentsOverlayController.fillSnapshots(snaps) }
+                        mainHandler.post {
+                            if (grid) GridRecentsOverlayController.fillSnapshots(snaps)
+                            else SlimRecentsOverlayController.fillSnapshots(snaps)
+                        }
                         Log.d("Key2Toolbox", "openRecents: snapshots ready in ${android.os.SystemClock.uptimeMillis() - t0} ms")
                     }
                 } else {
@@ -301,8 +310,8 @@ class Key2AccessibilityService : AccessibilityService() {
         // refreshes an already-open Slim List in place via rebuildRows()
         // rather than a full close+reopen, so pre-closing it here would just
         // add an unnecessary flicker for that specific action.
-        if (action != ToolbeltAction.RECENTS && SlimRecentsOverlayController.isShowing()) {
-            SlimRecentsOverlayController.hide(expandTaskId = null)
+        if (action != ToolbeltAction.RECENTS && RecentsOverlays.isShowing()) {
+            RecentsOverlays.hide(expandTaskId = null)
         }
         when (action) {
             ToolbeltAction.NONE, ToolbeltAction.TOGGLE_BELT -> {} // handled in the overlay
@@ -447,7 +456,7 @@ class Key2AccessibilityService : AccessibilityService() {
                     // keyguard and doesn't tear itself down just because the
                     // screen locked - close it immediately so it can never be
                     // sitting in front of the lock screen on wake.
-                    SlimRecentsOverlayController.hide(animate = false)
+                    RecentsOverlays.hide(animate = false)
                     return
                 }
                 forceReconcile()
@@ -1079,15 +1088,15 @@ class Key2AccessibilityService : AccessibilityService() {
         // is gated behind its own settings (Nav Lock's gesture mode, etc.)
         // that may not be active, which would otherwise leave the overlay
         // with no way to dismiss at all.
-        if (SlimRecentsOverlayController.isShowing()) {
+        if (RecentsOverlays.isShowing()) {
             when (kc) {
                 KeyEvent.KEYCODE_BACK -> {
-                    if (event.action == KeyEvent.ACTION_DOWN) SlimRecentsOverlayController.hide()
+                    if (event.action == KeyEvent.ACTION_DOWN) RecentsOverlays.hide()
                     return true
                 }
                 KeyEvent.KEYCODE_HOME -> {
                     if (event.action == KeyEvent.ACTION_DOWN) {
-                        SlimRecentsOverlayController.hide(expandTaskId = null)
+                        RecentsOverlays.hide(expandTaskId = null)
                         performGlobalAction(GLOBAL_ACTION_HOME)
                     }
                     return true

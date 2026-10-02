@@ -612,4 +612,9 @@
     <string name="recents_blur_module_remove">Module voor vervagingsondersteuning verwijderen</string>
     <string name="recents_blur_module_hint">Deze ROM meldt geen achtergrondvervaging, dus de schuifregelaar is uitgeschakeld. De module stelt bij het opstarten ro.surface_flinger.supports_background_blur=1 in (zoals de module Enable Blurs). Vereist root en een herstart; geldt systeembreed en kan de vloeiendheid op deze GPU verminderen.</string>
     <string name="recents_blur_module_pending">Module geïnstalleerd. Herstart om toe te passen.</string>
+    <string name="recents_slim_corner_grid">Hoekradius van het raster</string>
+    <string name="recents_slim_corner_quilt">Hoekradius van het mozaïek</string>
+    <string name="recents_slim_corner_square">Vierkant</string>
+    <string name="recents_grid_using_hook">Het raster wordt door de launcher getekend via de LSPosed-module.</string>
+    <string name="recents_grid_using_overlay">LSPosed-module niet gedetecteerd: het raster gebruikt de ingebouwde overlay (zelfde indeling, getekend door deze app, zonder hook).</string>
 </resources>

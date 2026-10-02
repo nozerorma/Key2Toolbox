@@ -612,4 +612,9 @@
     <string name="recents_blur_module_remove">Treu el mòdul de suport de desenfocament</string>
     <string name="recents_blur_module_hint">Aquest ROM no declara suport de desenfocament de fons, així que el control està desactivat. El mòdul fixa ro.surface_flinger.supports_background_blur=1 a l\'arrencada (igual que el mòdul Enable Blurs). Cal root i reiniciar; s\'aplica a tot el sistema i pot restar fluïdesa en aquesta GPU.</string>
     <string name="recents_blur_module_pending">Mòdul instal·lat. Reinicia per aplicar-lo.</string>
+    <string name="recents_slim_corner_grid">Radi de les cantonades de la quadrícula</string>
+    <string name="recents_slim_corner_quilt">Radi de les cantonades del mosaic</string>
+    <string name="recents_slim_corner_square">Quadrades</string>
+    <string name="recents_grid_using_hook">La graella la dibuixa el launcher mitjançant el mòdul LSPosed.</string>
+    <string name="recents_grid_using_overlay">Mòdul LSPosed no detectat: la graella fa servir la superposició integrada (mateix disseny, dibuixada per aquesta app, sense hook).</string>
 </resources>

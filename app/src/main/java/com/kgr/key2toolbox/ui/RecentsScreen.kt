@@ -57,6 +57,8 @@ fun RecentsScreen(onBack: () -> Unit) {
     var scrimOpacity by remember { mutableStateOf(SlimRecentsController.scrimOpacityPercent(prefs)) }
     var scrimBlur by remember { mutableStateOf(SlimRecentsController.scrimBlurPercent(prefs)) }
     var animPct by remember { mutableStateOf(SlimRecentsController.animDurationPercent(prefs)) }
+    var gridCorner by remember { mutableStateOf(SlimRecentsController.gridCornerDp(prefs)) }
+    var quiltCorner by remember { mutableStateOf(SlimRecentsController.quiltCornerDp(prefs)) }
     // Cross-window blur can be unavailable (battery saver, unsupported GPU path): say so instead of a dead slider.
     val blurSupported = remember {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
@@ -146,10 +148,14 @@ fun RecentsScreen(onBack: () -> Unit) {
             }
         }
 
-        // Slim List / Masonry paint their own full-screen scrim in-process - no
+        // Grid falls back to our own overlay when the LSPosed module is not active (see
+        // Key2AccessibilityService.openRecents); with the module, the launcher draws it.
+        val gridOverlay = mode == LayoutMode.GRID && !xposedActive
+
+        // Slim List / Masonry (and the Grid fallback) paint their own full-screen scrim in-process - no
         // launcher hook involved, so this is a separate control from the GRID/
         // STOCK transparency slider below.
-        if (mode.isOverlay) {
+        if (mode.isOverlay || gridOverlay) {
             DescriptionDivider()
             Text(
                 stringResource(R.string.recents_slim_appearance_section),
@@ -223,6 +229,29 @@ fun RecentsScreen(onBack: () -> Unit) {
                     }
                 }
             }
+            // Corner radius only applies to the tile layouts; the vertical list has its own fixed pills.
+            if (gridOverlay) {
+                IntSliderRow(
+                    label = stringResource(R.string.recents_slim_corner_grid),
+                    value = gridCorner,
+                    valueText = if (gridCorner == 0) stringResource(R.string.recents_slim_corner_square) else "$gridCorner dp",
+                    range = 0f..SlimRecentsController.MAX_CORNER_DP.toFloat(), steps = SlimRecentsController.MAX_CORNER_DP - 1,
+                    onChange = { gridCorner = it }, onCommit = {
+                        prefs.edit().putInt(SlimRecentsController.KEY_GRID_CORNER_DP, gridCorner).apply()
+                    }
+                )
+            }
+            if (mode == LayoutMode.MASONRY) {
+                IntSliderRow(
+                    label = stringResource(R.string.recents_slim_corner_quilt),
+                    value = quiltCorner,
+                    valueText = if (quiltCorner == 0) stringResource(R.string.recents_slim_corner_square) else "$quiltCorner dp",
+                    range = 0f..SlimRecentsController.MAX_CORNER_DP.toFloat(), steps = SlimRecentsController.MAX_CORNER_DP - 1,
+                    onChange = { quiltCorner = it }, onCommit = {
+                        prefs.edit().putInt(SlimRecentsController.KEY_QUILT_CORNER_DP, quiltCorner).apply()
+                    }
+                )
+            }
             IntSliderRow(
                 label = stringResource(R.string.recents_slim_anim_duration),
                 value = animPct,
@@ -260,6 +289,15 @@ fun RecentsScreen(onBack: () -> Unit) {
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (xposedActive) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.error
+                    )
+                    // Which path Grid is using right now.
+                    Text(
+                        stringResource(
+                            if (xposedActive) R.string.recents_grid_using_hook
+                            else R.string.recents_grid_using_overlay
+                        ),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     if (!xposedActive) {
                         Text(

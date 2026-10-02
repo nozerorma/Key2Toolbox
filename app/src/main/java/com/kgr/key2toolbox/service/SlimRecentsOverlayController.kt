@@ -787,7 +787,8 @@ object SlimRecentsOverlayController {
         val headerPx = px(CARD_HEADER_DP)
         val card = LinearLayout(svc).apply {
             orientation = LinearLayout.VERTICAL
-            background = GradientDrawable().apply { cornerRadius = 0f; setColor(Color.rgb(18, 18, 18)) }
+            // Square by default; the radius is a setting (Recents > Appearance). clipToOutline rounds the header strip too.
+            background = GradientDrawable().apply { cornerRadius = SlimRecentsController.quiltCornerPx(svc).toFloat(); setColor(Color.rgb(18, 18, 18)) }
             clipToOutline = true
             isClickable = true
         }

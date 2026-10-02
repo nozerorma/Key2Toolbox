@@ -586,4 +586,9 @@
     <string name="recents_blur_module_remove">Remover módulo de suporte de desfoque</string>
     <string name="recents_blur_module_hint">Esta ROM não declara desfoque de fundo, por isso o seletor está desativado. O módulo define ro.surface_flinger.supports_background_blur=1 no arranque (como o módulo Enable Blurs). Requer root e reinício; aplica-se a todo o sistema e pode reduzir a fluidez nesta GPU.</string>
     <string name="recents_blur_module_pending">Módulo instalado. Reinicie para aplicar.</string>
+    <string name="recents_slim_corner_grid">Raio dos cantos da grelha</string>
+    <string name="recents_slim_corner_quilt">Raio dos cantos do mosaico</string>
+    <string name="recents_slim_corner_square">Quadrados</string>
+    <string name="recents_grid_using_hook">A grelha é desenhada pelo launcher através do módulo LSPosed.</string>
+    <string name="recents_grid_using_overlay">Módulo LSPosed não detetado: a grelha usa a sobreposição integrada (mesmo desenho, desenhada por esta app, sem hook).</string>
 </resources>

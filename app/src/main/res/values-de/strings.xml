@@ -612,4 +612,9 @@
     <string name="recents_blur_module_remove">Unschärfe-Unterstützungsmodul entfernen</string>
     <string name="recents_blur_module_hint">Diese ROM meldet keine Hintergrundunschärfe, daher ist der Regler deaktiviert. Das Modul setzt beim Start ro.surface_flinger.supports_background_blur=1 (wie das Modul Enable Blurs). Benötigt Root und einen Neustart; gilt systemweit und kann auf dieser GPU die Flüssigkeit kosten.</string>
     <string name="recents_blur_module_pending">Modul installiert. Zum Anwenden neu starten.</string>
+    <string name="recents_slim_corner_grid">Eckenradius des Rasters</string>
+    <string name="recents_slim_corner_quilt">Eckenradius des Mosaiks</string>
+    <string name="recents_slim_corner_square">Eckig</string>
+    <string name="recents_grid_using_hook">Das Raster wird vom Launcher über das LSPosed-Modul gezeichnet.</string>
+    <string name="recents_grid_using_overlay">LSPosed-Modul nicht erkannt: Das Raster nutzt das eingebaute Overlay (gleiches Layout, von dieser App gezeichnet, ohne Hook).</string>
 </resources>
