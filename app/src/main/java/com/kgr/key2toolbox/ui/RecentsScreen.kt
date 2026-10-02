@@ -51,6 +51,8 @@ fun RecentsScreen(onBack: () -> Unit) {
     }
 
     var xposedActive by remember { mutableStateOf(RecentsController.isXposedActive()) }
+    // Is the module injected in the launcher (what the hooked Grid needs)? null until the root check returns.
+    var launcherHooked by remember { mutableStateOf<Boolean?>(null) }
     var mode by remember { mutableStateOf(LayoutMode.STOCK) }
     var scrim by remember { mutableFloatStateOf(1f) }
     var scrimColorMode by remember { mutableStateOf(SlimRecentsController.scrimColorMode(prefs)) }
@@ -81,7 +83,9 @@ fun RecentsScreen(onBack: () -> Unit) {
         withContext(Dispatchers.IO) {
             val m = RecentsController.getLayoutMode()
             val s = RecentsController.getScrimAlpha()
+            val hooked = RecentsController.isLauncherHooked()
             withContext(Dispatchers.Main) {
+                launcherHooked = hooked
                 mode = m
                 scrim = s
                 xposedActive = RecentsController.isXposedActive()
@@ -150,7 +154,7 @@ fun RecentsScreen(onBack: () -> Unit) {
 
         // Grid falls back to our own overlay when the LSPosed module is not active (see
         // Key2AccessibilityService.openRecents); with the module, the launcher draws it.
-        val gridOverlay = mode == LayoutMode.GRID && !xposedActive
+        val gridOverlay = mode == LayoutMode.GRID && launcherHooked == false
 
         // Slim List / Masonry (and the Grid fallback) paint their own full-screen scrim in-process - no
         // launcher hook involved, so this is a separate control from the GRID/
@@ -283,23 +287,23 @@ fun RecentsScreen(onBack: () -> Unit) {
                 ) {
                     Text(
                         stringResource(
-                            if (xposedActive) R.string.recents_xposed_ok
+                            if (launcherHooked == true) R.string.recents_xposed_ok
                             else R.string.recents_xposed_missing
                         ),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = if (xposedActive) MaterialTheme.colorScheme.primary
+                        color = if (launcherHooked == true) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.error
                     )
                     // Which path Grid is using right now.
                     Text(
                         stringResource(
-                            if (xposedActive) R.string.recents_grid_using_hook
+                            if (launcherHooked == true) R.string.recents_grid_using_hook
                             else R.string.recents_grid_using_overlay
                         ),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    if (!xposedActive) {
+                    if (launcherHooked == false) {
                         Text(
                             stringResource(R.string.recents_xposed_hint),
                             style = MaterialTheme.typography.bodySmall,

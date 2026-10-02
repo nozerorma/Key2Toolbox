@@ -31,7 +31,9 @@ All notable changes to Key2 Toolbox are documented here.
 - **Grid without LSPosed** (from Q25 Toolbox). A standalone two-row Grid overlay
   (newest tile large on the right, older ones in two rows to its left, "Close all"
   at the far end) now draws the Grid mode whenever the LSPosed module is not
-  detected; with the module, the launcher still draws it. Same animations, scrim,
+  injected in the launcher (checked from the launcher's `/proc/<pid>/maps` with
+  root, not from this app: the module can be enabled for the app and not the
+  launcher); with the module in the launcher, the launcher still draws it. Same animations, scrim,
   blur and snapshots as the other overlays; the Recents screen says which path is
   in use. Tile corner radius is adjustable for the overlay Grid (default 22 dp)
   and for Masonry (default 0 = square).

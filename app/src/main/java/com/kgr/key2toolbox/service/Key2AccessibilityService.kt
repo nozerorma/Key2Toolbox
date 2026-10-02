@@ -246,13 +246,14 @@ class Key2AccessibilityService : AccessibilityService() {
         // Mode read is non-root (world-readable Global key) so it never adds
         // shell-spawn latency to this path.
         val mode = RecentsController.getLayoutMode(this)
-        // Grid: with the LSPosed module active the launcher draws the grid itself (stock Overview, hooked);
-        // without it, draw our own standalone grid instead. isXposedActive() is true only when the module is
-        // enabled for this app, which the Recents screen asks the user to do.
-        val grid = mode == RecentsController.LayoutMode.GRID && !RecentsController.isXposedActive()
+        val gridMode = mode == RecentsController.LayoutMode.GRID
         val t0 = android.os.SystemClock.uptimeMillis()
         worker.execute {
             try {
+                // Grid: if the launcher has the LSPosed module injected, it draws the grid itself (stock Overview,
+                // hooked); otherwise draw our own standalone grid. Checked on the launcher, not on this app (see
+                // RecentsController.isLauncherHooked). Root call, so it lives here and not on the main thread.
+                val grid = gridMode && !RecentsController.isLauncherHooked()
                 if (mode.isOverlay || grid) {
                     val masonry = mode == RecentsController.LayoutMode.MASONRY
                     val cards = masonry || grid // the grid also shows snapshots
