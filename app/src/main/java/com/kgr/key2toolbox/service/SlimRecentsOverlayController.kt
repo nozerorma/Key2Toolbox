@@ -302,12 +302,9 @@ object SlimRecentsOverlayController {
         val v = root
         root = null
         if (v != null) {
-            val remove: () -> Unit = {
-                try {
-                    windowManager?.removeView(v)
-                } catch (_: IllegalArgumentException) {
-                }
-            }
+            val wm = windowManager
+            val params = windowParams
+            val remove: () -> Unit = { OverlayWindow.removeSoftly(wm, v, params) }
             // Only a tile with a real snapshot may grow to full screen. The app in front (and the home screen) have
             // no stored snapshot - Android takes it when a task goes to the background - so their tile is just the
             // dark placeholder, and expanding it would cover the screen with a black rectangle. Plain fade then.
@@ -319,11 +316,10 @@ object SlimRecentsOverlayController {
             // Duration 0 (setting or system animator scale off): no animators at all, just drop the window.
             val animating = animate && animMs(v.context, CLOSE_MS) > 0L
             if (animating && cardsMode && target != null && targetThumb != null) {
-                OverlayBlur.fadeOut(windowManager, v, windowParams,
-                    animMs(v.context, EXPAND_MS) + animMs(v.context, EXPAND_FADE_TAIL_MS))
+                OverlayWindow.blurOff(wm, v, params)
                 expandAndFade(v, cards, headers, target, targetThumb, remove)
             } else if (animating) {
-                OverlayBlur.fadeOut(windowManager, v, windowParams, animMs(v.context, CLOSE_MS))
+                OverlayWindow.blurOff(wm, v, params)
                 v.animate()
                     .alpha(0f).scaleX(CLOSE_SCALE).scaleY(CLOSE_SCALE)
                     .setDuration(animMs(v.context, CLOSE_MS))
