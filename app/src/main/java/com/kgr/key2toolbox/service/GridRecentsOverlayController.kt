@@ -574,7 +574,6 @@ object GridRecentsOverlayController {
     private fun playEntrance(svc: AccessibilityService) {
         val window = root ?: return
         val dur = animMs(svc, ENTRANCE_MS)
-        Log.d("Key2Toolbox", "GridRecents.entrance dur=$dur tiles=${tileViews.size}")
         if (dur <= 0L) return
         val ease = PathInterpolator(0.05f, 0.7f, 0.1f, 1f)
         val density = svc.resources.displayMetrics.density
@@ -601,7 +600,6 @@ object GridRecentsOverlayController {
             }
         }
         val t = if (hero != null && thumb != null) cover(svc, hero, thumb) else null
-        Log.d("Key2Toolbox", "GridRecents.entrance hero=${hero != null} cover=${t != null}")
         if (hero == null || t == null) return
         hero.translationZ = 8f
         hero.pivotX = t.pivotX; hero.pivotY = t.pivotY
