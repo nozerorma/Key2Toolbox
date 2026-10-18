@@ -595,6 +595,7 @@
     <string-array name="toolbelt_color_modes">
         <item>Fix (negre)</item>
         <item>Material You</item>
+        <item>Segueix l\'app</item>
     </string-array>    <string name="telemetry_show_details">Mostra l\'estat per app (%1$d)</string>
     <string name="telemetry_hide_details">Amaga l\'estat per app</string>
     <string name="telemetry_surface_blocked">blocat</string>

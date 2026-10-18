@@ -595,6 +595,7 @@
     <string-array name="toolbelt_color_modes">
         <item>Vast (zwart)</item>
         <item>Material You</item>
+        <item>Volg de app</item>
     </string-array>    <string name="telemetry_show_details">Status per app tonen (%1$d)</string>
     <string name="telemetry_hide_details">Status per app verbergen</string>
     <string name="telemetry_surface_blocked">geblokkeerd</string>

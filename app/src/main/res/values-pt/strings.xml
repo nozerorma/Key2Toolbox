@@ -569,6 +569,7 @@
     <string-array name="toolbelt_color_modes">
         <item>Fixo (preto)</item>
         <item>Material You</item>
+        <item>Seguir a app</item>
     </string-array>    <string name="telemetry_show_details">Mostrar estado por app (%1$d)</string>
     <string name="telemetry_hide_details">Ocultar estado por app</string>
     <string name="telemetry_surface_blocked">bloqueado</string>
